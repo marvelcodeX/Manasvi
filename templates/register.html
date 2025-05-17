@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Signup Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #fff8dc;
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .signup-box {
+      background-color: #f47a20;
+      padding: 50px 40px;
+      border-radius: 10px;
+      text-align: center;
+      width: 320px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      color: #fff8dc;
+      margin-bottom: 30px;
+    }
+
+    form {
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      color: #fff8dc;
+      margin: 12px 0 5px;
+      font-size: 14px;
+      text-align: left;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 90%;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      background-color: #fff8dc;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      font-size: 14px;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .register-button {
+      display: block;
+      margin: 25px auto 0;
+      padding: 10px 30px;
+      background-color: #fff8dc;
+      color: #f47a20;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    .register-button:hover {
+      background-color:#F8ED62;
+      transform: scale(1.05);
+    }
+
+    .login-text {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #fff8dc;
+      text-align: center;
+    }
+
+    .login-text a {
+      color: #000080;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .login-text a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="signup-box">
+    <h2>SIGNUP</h2>
+    <form>
+      <label for="username">Enter Username:</label>
+      <input type="text" id="username" name="username" required />
+
+      <label for="email">Enter Email:</label>
+      <input type="email" id="email" name="email" required />
+
+      <label for="password">Enter Password:</label>
+      <input type="password" id="password" name="password" required />
+
+      <label for="confirm">Confirm Password:</label>
+      <input type="password" id="confirm" name="confirm" required />
+
+      <button type="submit" class="register-button">REGISTER</button>
+    </form>
+    <div class="login-text">
+      Already have an account? <a href="login.html">LOGIN</a>
+    </div>
+  </div>
+</body>
+</html>

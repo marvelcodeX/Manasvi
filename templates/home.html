@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home page</title>
+
+  <!-- Google Font: Alata -->
+  <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Alata', sans-serif;
+      background-color: #fdf5d7;
+      color: #f57c2c;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .sidebar {
+      width: 25%;
+      background-color: #f57c2c;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      color: #fff;
+      transition: background-color 0.3s ease;
+    }
+
+    .sidebar .logo {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .sidebar .logo h1 {
+      font-size: 28px;
+      margin-top: 10px;
+    }
+
+    .sidebar .logo p {
+      font-size: 12px;
+      font-style: italic;
+    }
+
+    .chat-list {
+      background-color: #fef9e6;
+      border-radius: 20px;
+      width: 100%;
+      padding: 15px;
+      flex-grow: 1;
+      margin-bottom: 20px;
+      overflow-y: auto;
+    }
+
+    .chat-list h2 {
+      text-align: center;
+      color: #f57c2c;
+      margin-bottom: 10px;
+    }
+
+    .sidebar-buttons {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .sidebar-buttons button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px;
+      background-color: #fff;
+      border: none;
+      border-radius: 12px;
+      color: #f57c2c;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .sidebar-buttons button:hover {
+      background-color: #fef9e6;
+    }
+
+    .main-content {
+      width: 75%;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      background-color: #fdf5d7;
+      transition: background-color 0.3s ease;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+      align-items: center;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #aaa;
+    }
+
+    .top-bar .circle-btn {
+      background-color: #f57c2c;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      color: #fff;
+    }
+
+    .top-bar .circle-btn.dark {
+      background-color: #000;
+    }
+
+    .chat-area {
+      flex-grow: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .chat-input {
+      display: flex;
+      align-items: center;
+      margin-top: auto;
+      background-color: #fff;
+      padding: 10px 20px;
+      border-radius: 40px;
+    }
+
+    .chat-input input {
+      flex-grow: 1;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      background: transparent;
+    }
+
+    .icon-btn {
+      background-color: #f57c2c;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      margin-left: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    /* Lucide icons */
+    .lucide {
+      stroke: #fff;
+      stroke-width: 2;
+      width: 20px;
+      height: 20px;
+    }
+
+    .sidebar-buttons .lucide {
+      stroke: #f57c2c;
+    }
+
+    /* DARK MODE STYLES */
+    body.dark-mode {
+      background-color: #121212;
+      color: #fef9e6;
+    }
+
+    body.dark-mode .sidebar {
+      background-color: #1f1f1f;
+      color: #fef9e6;
+    }
+
+    body.dark-mode .chat-list {
+      background-color: #2c2c2c;
+    }
+
+    body.dark-mode .main-content {
+      background-color: #1a1a1a;
+    }
+
+    body.dark-mode .top-bar {
+      border-color: #333;
+    }
+
+    body.dark-mode .chat-input {
+      background-color: #2c2c2c;
+    }
+
+    body.dark-mode .chat-input input {
+      color: #fef9e6;
+    }
+
+    body.dark-mode .icon-btn {
+      background-color: #333;
+    }
+
+    body.dark-mode .lucide {
+      stroke: #fef9e6;
+    }
+
+    body.dark-mode .sidebar-buttons button {
+      background-color: #333;
+      color: #fef9e6;
+    }
+
+    body.dark-mode .sidebar-buttons button:hover {
+      background-color: #444;
+    }
+
+    body.dark-mode .chat-list h2 {
+      color: #fef9e6;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="logo">
+      <h1>MANASVI</h1>
+      <p>Where Ancient Wisdom Meets the Modern Mind.</p>
+    </div>
+
+    <div class="chat-list">
+      <h2>CHATS</h2>
+      <!-- Chat history will appear here -->
+    </div>
+
+    <div class="sidebar-buttons">
+      <button>
+        <i data-lucide="bar-chart-3"></i>
+        MOOD TRACKER
+      </button>
+      <button>
+        <i data-lucide="meditation"></i>
+        EKANTA NILAYA
+      </button>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="top-bar">
+      <div class="circle-btn"><span>A</span></div>
+      <div class="circle-btn dark" id="toggle-dark"><i data-lucide="moon"></i></div>
+    </div>
+
+    <div class="chat-area">
+      <!-- Main chat area -->
+    </div>
+
+    <div class="chat-input">
+      <input type="text" placeholder="Type your message..." />
+      <button class="icon-btn"><i data-lucide="mic"></i></button>
+      <button class="icon-btn"><i data-lucide="send"></i></button>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    // Toggle dark mode
+    document.getElementById('toggle-dark').addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+    });
+  </script>
+</body>
+</html>
