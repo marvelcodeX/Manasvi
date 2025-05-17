@@ -34,8 +34,8 @@
 
 | Layer           | Technology Used                                       |
 |----------------|--------------------------------------------------------|
-| 💻 Frontend     | [Streamlit](https://streamlit.io/)                     |
-| 🧠 Chatbot      | [Azure AI Foundation (GPT-4)]                          |
+| 💻 Frontend     | HTML and CSS                                           |
+| 🧠 Chatbot      | GROQ API                                               |
 | 🎙️ Voice Input  | [OpenAI Whisper](https://openai.com/research/whisper)  |
 | 📊 Graphs       | [Plotly](https://plotly.com/python/)                  |
 | 🗄️ Database     | SQLite (with user data isolation)                     |
