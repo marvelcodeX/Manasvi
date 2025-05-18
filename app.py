@@ -1,15 +1,16 @@
-app.py
+
 import os
 import uuid
 import datetime
 import sqlite3
 import requests
-from flask import Flask, request, render_template, redirect, url_for, flash, send_from_directory, session
+from flask import Flask, request, render_template, redirect, url_for, flash, send_from_directory, session, jsonify
 import openai
 import pandas as pd
 import plotly.express as px
 import io
 import base64
+from functools import wraps
 from rag_utils import load_knowledge_base, query_knowledge
 
 app = Flask(__name__)
@@ -41,6 +42,12 @@ def init_db():
                     content TEXT,
                     conversation_id TEXT
                 )""")
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+            username TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL
+        )
+    ''')
     conn.commit()
     conn.close()
 
@@ -71,7 +78,7 @@ def save_message(role, content, conversation_id):
     conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute("INSERT INTO chat_history (date, role, content, conversation_id) VALUES (?, ?, ?, ?)",
-              (str(datetime.date.today()), role, content, conversation_id))
+                (str(datetime.date.today()), role, content, conversation_id))
     conn.commit()
     conn.close()
 
@@ -79,7 +86,7 @@ def get_chat_history(conversation_id, limit=10):
     conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute("SELECT role, content FROM chat_history WHERE conversation_id = ? ORDER BY id DESC LIMIT ?",
-              (conversation_id, limit * 2))
+                (conversation_id, limit * 2))
     rows = c.fetchall()
     conn.close()
     chat_messages = list(reversed([{"role": role, "content": content} for role, content in rows]))
@@ -87,9 +94,7 @@ def get_chat_history(conversation_id, limit=10):
     system_message = {
         "role": "system",
         "content": (
-            "You are Manasvi, an empathetic Indian mental health assistant. "
-            "Respond with Indian cultural sensitivity and local relevance. "
-            "Be warm, polite, and supportive in tone. Use bullet points, numbered lists, and formatting where helpful."
+            "Namaste, I’m Manasvi — your empathetic mental health assistant from India, here to support you with kindness, understanding, and culturally rooted care every step of the way."
         )
     }
     return [system_message] + chat_messages
@@ -141,12 +146,81 @@ def get_groq_response_with_history(kb_snippet=None, user_input=None, conversatio
         print(f"[Groq Error] {e}")
         return "Sorry, there was an error reaching the chatbot service."
 
-# ------------------ Routes ------------------
-@app.route("/", methods=["GET", "POST"])
-def index():
-    init_db()
+# ------------------ Decorators ------------------
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user' not in session:
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
 
-    # Create a new conversation ID if none exists
+# ------------------ ROUTES ------------------
+
+# Home (redirects based on login status)
+@app.route("/")
+def home():
+    if 'user' in session:
+        return redirect(url_for('dashboard'))
+    return redirect(url_for('login'))
+
+# Login
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        try:
+            conn = sqlite3.connect(DATABASE)
+            c = conn.cursor()
+            c.execute("SELECT password FROM users WHERE username = ?", (username,))
+            row = c.fetchone()
+            conn.close()
+
+            if row and row[0] == password:
+                session['user'] = username
+                return redirect(url_for('dashboard'))
+            else:
+                flash("Invalid credentials")
+        except sqlite3.Error as e:
+            flash(f"Database error: {e}")
+
+    return render_template('login.html')
+
+# Signup (protected)
+@app.route('/signup', methods=['GET', 'POST'])
+# @login_required  <-- REMOVE THIS LINE
+def signup():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        conn = sqlite3.connect(DATABASE)
+        c = conn.cursor()
+
+        try:
+            c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
+            conn.commit()
+            flash("Account created! Please log in.")
+        except sqlite3.IntegrityError:
+            flash("Username already exists. Please choose another.")
+        finally:
+            conn.close()
+
+        return redirect(url_for('login'))
+    return render_template('signup.html')
+# Logout
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
+
+# Dashboard / Main Chat UI
+@app.route("/dashboard", methods=["GET", "POST"])
+@login_required
+def dashboard():
+    init_db()
     if 'conversation_id' not in session:
         session['conversation_id'] = str(uuid.uuid4())
     conversation_id = session['conversation_id']
@@ -164,7 +238,6 @@ def index():
             if mood:
                 save_mood(mood)
                 flash("Mood saved successfully!", "success")
-            return redirect(url_for("index"))
 
         if mode == "Text":
             user_input = request.form.get("user_input_text", "").strip()
@@ -193,20 +266,43 @@ def index():
         current_cid=conversation_id
     )
 
+# Start New Chat
 @app.route("/new_chat")
+@login_required
 def new_chat():
     session['conversation_id'] = str(uuid.uuid4())
     flash("Started a new chat!", "success")
-    return redirect(url_for("index"))
+    return redirect(url_for("dashboard"))
 
+# Load Previous Chat
 @app.route("/chat/<cid>")
+@login_required
 def load_chat(cid):
     session['conversation_id'] = cid
-    return redirect(url_for("index"))
+    return redirect(url_for("dashboard"))
 
+# Mood Tracker Page
+@app.route('/mood-tracker')
+@login_required
+def mood_tracker():
+    return render_template('mood_tracker.html')
+
+# Ekanta Nilaya Page
+@app.route('/ekanta-nilaya')
+@login_required
+def ekanta_nilaya():
+    return render_template('ekanta_nilaya.html')
+
+# Favicon
 @app.route('/favicon.ico')
 def favicon():
-    return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico', mimetype='image/vnd.microsoft.icon')
+    return send_from_directory(
+        os.path.join(app.root_path, 'static'),
+        'favicon.ico',
+        mimetype='image/vnd.microsoft.icon'
+    )
 
+# Run Server
 if __name__ == "__main__":
+    init_db()
     app.run(debug=True, port=8000)

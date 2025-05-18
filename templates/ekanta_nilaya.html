@@ -1,0 +1,390 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Ekanta Nilaya</title>
+    <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet"/>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Alata', sans-serif;
+            background-color: #fdf5d7;
+            color: #f57c2c;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar {
+            width: 25%;
+            background-color: #f57c2c;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: #fff;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar .logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .sidebar .logo h1 {
+            font-size: 28px;
+            margin-top: 10px;
+        }
+
+        .sidebar .logo p {
+            font-size: 12px;
+            font-style: italic;
+        }
+
+        .chat-list-container { /* New container for chat button */
+            width: 100%;
+            margin-bottom: 20px;
+            padding: 0 15px; /* Add some horizontal padding to align with other buttons */
+        }
+
+        .chat-button { /* Renamed for clarity and styling */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px;
+            background-color: #fff;
+            border: none;
+            border-radius: 12px;
+            color: #f57c2c;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            width: 100%; /* Make it full width of its container */
+        }
+
+        .chat-button:hover {
+            background-color: #fef9e6;
+        }
+
+        .chat-button.active {
+            background-color: #fef9e6;
+            font-weight: bold;
+        }
+
+        .chat-button.active .lucide {
+            stroke: #f57c2c;
+        }
+
+        .sidebar-buttons {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 50px;
+        }
+
+        .sidebar-buttons button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px 10px;
+            background-color: #fff;
+            border: none;
+            border-radius: 12px;
+            color: #f57c2c;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            min-height: 100px;
+        }
+
+        .sidebar-buttons button:hover {
+            background-color: #fef9e6;
+        }
+
+        .sidebar-buttons button.active {
+            background-color: #fef9e6;
+            font-weight: bold;
+        }
+
+        .sidebar-buttons button.active .lucide {
+            stroke: #f57c2c;
+        }
+
+        .lucide {
+            stroke: #f57c2c;
+            stroke-width: 2;
+            width: 20px;
+            height: 20px;
+        }
+
+        .main-content {
+            width: 75%;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            background-color: #fdf5d7;
+            transition: background-color 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .quote {
+            font-size: 1.8rem;
+            font-style: italic;
+            margin-bottom: 40px;
+            color: #666;
+            text-align: center;
+            line-height: 1.6;
+            max-width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .timer-section {
+            background-color: #fff;
+            padding: 25px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            max-width: 450px;
+            margin: 0 auto;
+            width: 85%;
+            min-height: 480px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        .timer-section label {
+            display: block;
+            margin-bottom: 30px;
+            font-weight: 500;
+            color: #f57c2c;
+            font-size: 1.5rem;
+        }
+
+        .timer-section input[type="number"],
+        .timer-section select {
+            width: 100%;
+            padding: 17px;
+            font-size: 0.9rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .buttons-row {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .timer-section button {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            border: none;
+            border-radius: 8px;
+            background-color: #f47a20;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+            user-select: none;
+        }
+
+        .timer-section button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .timer-section button:hover:not(:disabled) {
+            background-color: #d9630a;
+        }
+
+        #countdownDisplay {
+            font-size: 1.5rem;
+            color: #444;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-top: 2px;
+            font-family: 'Alata', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <h1>MANASVI</h1>
+            <p>Where Ancient Wisdom Meets the Modern Mind.</p>
+        </div>
+        <br>
+        <br>
+        <br>
+        <div class="sidebar-buttons">
+            <button class="chat-button active" onclick="window.location.href='{{ url_for('new_chat') }}'">
+                CHATS
+            </button>
+        </div>
+        <br>
+        <br>
+        <br>
+        <div class="sidebar-buttons">
+            <button onclick="window.location.href='{{ url_for('mood_tracker') }}'">
+                MOOD TRACKER
+            </button>
+        <br>
+        <br>
+        <br>
+            <button class="active" onclick="window.location.href='{{ url_for('ekanta_nilaya') }}'">
+                <i data-lucide="meditation"></i>
+                EKANTA NILAYA
+            </button>
+        </div>
+    </div>
+
+    <div class="main-content">
+
+        <div class="quote">“The quieter you become, the more you can hear.”</div>
+
+        <div class="timer-section">
+            <label for="timeInput">Set Meditation Time (in minutes):</label>
+            <input type="number" id="timeInput" min="1" placeholder="e.g. 10" />
+
+            <label for="audioSelect">Choose Ambient Sound:</label>
+            <select id="audioSelect">
+                <option value="flute">Flute Melody</option>
+                <option value="sitar">Sitar Music</option>
+                <option value="violin">Violin Serenity</option>
+            </select>
+
+            <div class="buttons-row">
+                <button id="startBtn">Start</button>
+                <button id="pauseBtn" disabled>Pause</button>
+            </div>
+
+            <div id="countdownDisplay">00:00</div>
+
+            <audio id="fluteAudio" src="{{ url_for('static', filename='flute.mp3') }}" loop></audio>
+            <audio id="sitarAudio" src="{{ url_for('static', filename='sitar.mp3') }}" loop></audio>
+            <audio id="violinAudio" src="{{ url_for('static', filename='violin.mp3') }}" loop></audio>
+        </div>
+    </div>
+
+    <script id="ekanta-nilaya-script">
+        lucide.createIcons();
+
+        let countdown;
+        let remainingSeconds = 0;
+        let isPaused = false;
+        let currentAudio = null;
+
+        const countdownDisplay = document.getElementById("countdownDisplay");
+        const startBtn = document.getElementById("startBtn");
+        const pauseBtn = document.getElementById("pauseBtn");
+        const timeInput = document.getElementById("timeInput");
+        const audioSelect = document.getElementById("audioSelect");
+        const audioElements = {
+            flute: document.getElementById("fluteAudio"),
+            sitar: document.getElementById("sitarAudio"),
+            violin: document.getElementById("violinAudio")
+        };
+
+        function updateDisplay(seconds) {
+            const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+            const secs = (seconds % 60).toString().padStart(2, '0');
+            countdownDisplay.textContent = `${mins}:${secs}`;
+        }
+
+        function playAudio(name) {
+            if (currentAudio && currentAudio !== audioElements[name]) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+            }
+            currentAudio = audioElements[name];
+            if (currentAudio) {
+                currentAudio.play().catch(error => console.error("Audio playback failed:", error));
+            }
+        }
+
+        function pauseCurrentAudio() {
+            if (currentAudio) {
+                currentAudio.pause();
+            }
+        }
+
+        function resumeCurrentAudio() {
+            if (currentAudio) {
+                currentAudio.play().catch(error => console.error("Audio playback failed:", error));
+            }
+        }
+
+        if (startBtn) {
+            startBtn.addEventListener("click", () => {
+                const minutes = parseInt(timeInput.value);
+                if (!minutes || minutes < 1) {
+                    alert("Please enter a valid number of minutes.");
+                    return;
+                }
+
+                if (countdown) clearInterval(countdown);
+                remainingSeconds = minutes * 60;
+                updateDisplay(remainingSeconds);
+                isPaused = false;
+                pauseBtn.disabled = false;
+                pauseBtn.textContent = "Pause";
+
+                const selectedAudioName = audioSelect.value;
+                playAudio(selectedAudioName);
+
+                countdown = setInterval(() => {
+                    if (!isPaused && remainingSeconds > 0) {
+                        remainingSeconds--;
+                        updateDisplay(remainingSeconds);
+                    } else if (remainingSeconds === 0) {
+                        clearInterval(countdown);
+                        pauseBtn.disabled = true;
+                        if (currentAudio) {
+                            currentAudio.pause();
+                            currentAudio.currentTime = 0; // Optionally reset audio
+                            currentAudio = null;
+                        }
+                    }
+                }, 1000);
+            });
+        }
+
+        if (pauseBtn) {
+            pauseBtn.addEventListener("click", () => {
+                isPaused = !isPaused;
+                pauseBtn.textContent = isPaused ? "Resume" : "Pause";
+                if (isPaused) {
+                    pauseCurrentAudio();
+                } else {
+                    resumeCurrentAudio();
+                }
+            });
+        }
+
+        // Ensure audio loops
+        for (const key in audioElements) {
+            if (audioElements.hasOwnProperty(key) && audioElements[key]) {
+                audioElements[key].loop = true;
+            }
+        }
+    </script>
+</body>
+</html>
