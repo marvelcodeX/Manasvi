@@ -37,7 +37,7 @@
 | 💻 Frontend     | HTML and CSS                                           |
 | 🧠 Chatbot      | GROQ API                                               |
 | 🎙️ Voice Input  | [OpenAI Whisper](https://openai.com/research/whisper)  |
-| 📊 Graphs       | [Plotly](https://plotly.com/python/)                  |
+| 📊 Graphs       | Chart.js                                              |
 | 🗄️ Database     | SQLite (with user data isolation)                     |
 | 🔐 Auth         | Python + `bcrypt` for password hashing                |
 
