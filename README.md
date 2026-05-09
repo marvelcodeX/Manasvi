@@ -1,103 +1,109 @@
-# 🧘‍♀️ Manasvi – Your Indian Mental Wellness Companion 🇮🇳💬🌿
+# Manasvi
 
-**Manasvi** (मनस्वी) is an AI-powered mental wellness chatbot built especially for Indian users. Whether you're feeling stressed, anxious, or just need a break — Manasvi is here to chat, guide you through **Pranayama breathing techniques**, suggest **yoga asanas**, track your mood, and help you meditate with soothing Indian melodies.
+Manasvi is a Flask-based mental wellness chatbot with culturally aware support, RAG-assisted responses, mood tracking, and a meditation timer with calming audio.
 
----
+This project is intended for wellness support and reflection. It is not a replacement for medical care, therapy, crisis support, or emergency services.
 
-## 🇮🇳 India-Focused Wellness Features
+## Features
 
-- 🙏 **Yoga & Pranayama Guidance**: Get personalized suggestions for breathing techniques like *Anulom Vilom* and *Bhramari*, or asanas like *Balasana* and *Shavasana*.
-- 🎶 **Indian Calming Music**: Meditate with gentle sitar, flute, or rain ragas.
+- Account signup and login with hashed passwords
+- AI chatbot powered by Groq's OpenAI-compatible chat API
+- Retrieval-assisted prompts from a local wellness knowledge base
+- Browser speech-to-text input for chat messages
+- Server-backed mood tracker with a 30-entry trend chart
+- Ekanta Nilaya meditation timer with flute, sitar, and violin audio
+- Responsive shared UI, dark mode, and reusable templates
 
----
+## Project Structure
 
-## 🌼 Why Manasvi?
+```text
+.
+├── app.py                  # Flask entry point
+├── manasvi/                # Application package
+│   ├── app.py              # Routes and app factory
+│   ├── config.py           # Environment-based configuration
+│   ├── db.py               # SQLite setup and queries
+│   ├── rag.py              # Knowledge-base retrieval
+│   └── services.py         # Chatbot prompt and Groq integration
+├── data/
+│   └── knowledge_base.txt  # Local wellness knowledge base
+├── static/
+│   ├── css/styles.css
+│   ├── js/app.js
+│   └── *.mp3, img2.png
+├── templates/              # Jinja templates
+├── requirements.txt
+└── .env.example
+```
 
-- Named after the Sanskrit word *Manasvi*, meaning “of pure mind” 🕊️
-- Brings ancient Indian wellness practices to modern tech interfaces
-- Empowers mental health with AI, not stigma
+## Setup
 
----
-
-## 🚀 Features
-
-- 💬 **AI Chatbot**: Chat via text or voice using an Azure GPT-4-powered assistant.
-- 🎤 **Voice to Text**: Speak your thoughts — OpenAI Whisper will convert them to text.
-- 📈 **Mood Tracker**: Record how you're feeling and view progress over time with interactive Plotly graphs.
-- 🧘 **Meditation Corner**: Play calming music and set a timer to relax your mind.
-- 🔐 **User Login System**: Secure signup/login so your data stays yours.
-- 🔒 **Data Isolation**: Each user’s data is stored separately and securely.
-
----
-
-## 🛠️ Tech Stack
-
-| Layer           | Technology Used                                       |
-|----------------|--------------------------------------------------------|
-| 💻 Frontend     | HTML and CSS                                           |
-| 🧠 Chatbot      | GROQ API                                               |
-| 🎙️ Voice Input  | [OpenAI Whisper](https://openai.com/research/whisper)  |
-| 📊 Graphs       | Chart.js                                              |
-| 🗄️ Database     | SQLite (with user data isolation)                     |
-| 🔐 Auth         | Python + `bcrypt` for password hashing                |
-
----
-
-## 🚀 How to Run the Project
-
-Follow these steps to set up and run the project locally:
-
-### 1. Clone the Repository
+1. Create and activate a virtual environment:
 
 ```bash
-git clone https://github.com/yourusername/yourproject.git
-cd yourproject
+python3 -m venv .venv
+source .venv/bin/activate
 ```
 
-### 2. Create and Activate a Virtual Environment
-
-**On macOS/Linux:**
+On Windows:
 
 ```bash
-python3 -m venv venv
-source venv/bin/activate
+python -m venv .venv
+.venv\Scripts\activate
 ```
 
-**On Windows:**
-
-```bash
-python -m venv venv
-venv\Scripts\activate
-```
-
-### 3. Set Up Environment Variables
-
-Create a `.env` file in the root directory and add your API keys:
-
-```env
-GROQ_API_KEY=your_groq_api_key_here
-WHISPER_API_KEY=your_openai_whisper_api_key_here
-```
-
-> ⚠️ **Note:** Never commit your `.env` file to version control.
-
-### 4. Install Dependencies
+2. Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 5. Run the Application
+For FAISS + Sentence Transformers retrieval, install the optional vector dependencies:
+
+```bash
+pip install -r requirements-vector.txt
+```
+
+3. Create local environment variables:
+
+```bash
+cp .env.example .env
+```
+
+Set `GROQ_API_KEY` in `.env`. For production, use a strong `FLASK_SECRET_KEY`.
+
+4. Run the app:
 
 ```bash
 python app.py
 ```
 
-The application should now be running. Follow the console instructions or visit the localhost URL if using a web framework.
+Open `http://127.0.0.1:8000`.
 
----
+## Configuration
 
+| Variable | Purpose | Default |
+| --- | --- | --- |
+| `FLASK_SECRET_KEY` | Flask session signing key | `dev-secret-change-me` |
+| `GROQ_API_KEY` | Groq API key for chatbot responses | required for AI responses |
+| `GROQ_MODEL` | Groq model name | `llama-3.3-70b-versatile` |
+| `GROQ_API_URL` | OpenAI-compatible chat completions endpoint | Groq chat endpoint |
+| `MANASVI_ENABLE_VECTOR_RAG` | Use FAISS + Sentence Transformers retrieval when set to `1` | `0` |
+| `MANASVI_DB_PATH` | SQLite database path | `instance/manasvi.db` |
+| `MANASVI_KB_PATH` | Knowledge base path | `data/knowledge_base.txt` |
+| `FLASK_DEBUG` | Enable Flask debug mode with `1` | `0` |
 
-## Snapshots
-![Demo Image](static/img2.png)
+## Notes
 
+- Runtime files such as `.env`, `instance/`, and SQLite databases are ignored by Git.
+- Keyword retrieval is enabled by default. Set `MANASVI_ENABLE_VECTOR_RAG=1` to use FAISS and Sentence Transformers.
+- Browser voice input depends on the user's browser speech-recognition support.
+
+## Safety
+
+Manasvi includes a basic crisis-keyword response, but it cannot detect every emergency and cannot provide crisis intervention. Users who may be in immediate danger should contact local emergency services or a trusted person right away.
+
+## Demo Images
+![Manasvi](demo_images/Manasvi_1.png)
+![Manasvi](demo_images/Manasvi_2.png)
+![Manasvi](demo_images/Manasvi_3.png)

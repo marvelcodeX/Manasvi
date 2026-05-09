@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Chat | Manasvi{% endblock %}
+{% block page_title %}Chat with Manasvi{% endblock %}
+
+{% block content %}
+<section class="chat-layout">
+    {% if not kb_ready %}
+        <div class="notice">
+            RAG dependencies are not fully available, so Manasvi is using a lightweight keyword search fallback.
+        </div>
+    {% endif %}
+
+    <div class="chat-window" id="chatWindow">
+        {% if chat_history %}
+            {% for message in chat_history %}
+                <article class="message {{ message.role }}">
+                    <span>{{ "You" if message.role == "user" else "Manasvi" }}</span>
+                    <p>{{ message.content }}</p>
+                </article>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <i data-lucide="message-circle-heart"></i>
+                <h2>Start with what is on your mind.</h2>
+                <p>Manasvi can help you reflect, slow down, and explore practical wellness steps.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <form class="composer" method="post">
+        <textarea name="message" rows="3" placeholder="Type your thoughts here..." required></textarea>
+        <div class="composer-actions">
+            <button class="secondary-button" type="button" id="voiceButton">
+                <i data-lucide="mic"></i>
+                Speak
+            </button>
+            <button class="primary-button" type="submit">
+                <i data-lucide="send"></i>
+                Send
+            </button>
+        </div>
+        <p class="microcopy" id="voiceStatus">Voice input uses your browser speech recognition when available.</p>
+    </form>
+</section>
+{% endblock %}

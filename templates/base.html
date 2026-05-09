@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Manasvi{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+    {% block head %}{% endblock %}
+</head>
+<body>
+    {% if user %}
+        <div class="app-shell">
+            <aside class="sidebar" aria-label="Main navigation">
+                <a class="brand" href="{{ url_for('dashboard') }}">
+                    <span class="brand-mark">M</span>
+                    <span>
+                        <strong>Manasvi</strong>
+                        <small>Ancient wisdom, modern care</small>
+                    </span>
+                </a>
+
+                <nav class="nav-stack">
+                    <a class="nav-item {% if active_page == 'chat' %}active{% endif %}" href="{{ url_for('dashboard') }}">
+                        <i data-lucide="messages-square"></i>
+                        Chat
+                    </a>
+                    <a class="nav-item {% if active_page == 'mood' %}active{% endif %}" href="{{ url_for('mood_tracker') }}">
+                        <i data-lucide="chart-no-axes-column"></i>
+                        Mood Tracker
+                    </a>
+                    <a class="nav-item {% if active_page == 'ekanta' %}active{% endif %}" href="{{ url_for('ekanta_nilaya') }}">
+                        <i data-lucide="leaf"></i>
+                        Ekanta Nilaya
+                    </a>
+                </nav>
+
+                <section class="conversation-panel" aria-label="Conversations">
+                    <div class="section-heading">
+                        <span>Conversations</span>
+                        <a class="icon-link" href="{{ url_for('new_chat') }}" aria-label="Start new chat">
+                            <i data-lucide="plus"></i>
+                        </a>
+                    </div>
+                    <div class="conversation-list">
+                        {% if conversations %}
+                            {% for conversation in conversations %}
+                                <a class="conversation-link {% if current_cid == conversation.conversation_id %}active{% endif %}" href="{{ url_for('load_chat', conversation_id=conversation.conversation_id) }}">
+                                    <span>{{ conversation.started_at[:10] }}</span>
+                                    <small>{{ conversation.conversation_id[:8] }}</small>
+                                </a>
+                            {% endfor %}
+                        {% else %}
+                            <p class="empty-state compact">No saved chats yet.</p>
+                        {% endif %}
+                    </div>
+                </section>
+
+                <div class="sidebar-footer">
+                    <span class="user-chip">{{ user.username[:1]|upper }}</span>
+                    <span class="sidebar-user">{{ user.username }}</span>
+                    <a class="logout-link" href="{{ url_for('logout') }}">Logout</a>
+                </div>
+            </aside>
+
+            <main class="main-panel">
+                <header class="topbar">
+                    <div>
+                        <p class="eyebrow">{% block eyebrow %}Mental wellness companion{% endblock %}</p>
+                        <h1>{% block page_title %}Manasvi{% endblock %}</h1>
+                    </div>
+                    <button class="icon-button" id="themeToggle" type="button" aria-label="Toggle theme">
+                        <i data-lucide="moon"></i>
+                    </button>
+                </header>
+                {% include "partials/flash.html" %}
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    {% else %}
+        {% include "partials/flash.html" %}
+        {% block auth_content %}{% endblock %}
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}{{ "Login" if mode == "login" else "Sign up" }} | Manasvi{% endblock %}
+
+{% block auth_content %}
+<main class="auth-page">
+    <section class="auth-panel">
+        <div class="auth-copy">
+            <span class="brand-mark large">M</span>
+            <h1>Manasvi</h1>
+            <p>A mental wellness chatbot with mood tracking, culturally aware guidance, and a quiet meditation timer.</p>
+        </div>
+
+        <form class="auth-card" method="post" action="{{ url_for('login') if mode == 'login' else url_for('signup') }}">
+            <div>
+                <p class="eyebrow">{{ "Welcome back" if mode == "login" else "Create account" }}</p>
+                <h2>{{ "Log in" if mode == "login" else "Sign up" }}</h2>
+            </div>
+
+            <label>
+                Username
+                <input name="username" type="text" autocomplete="username" minlength="3" required>
+            </label>
+
+            {% if mode == "signup" %}
+                <label>
+                    Email
+                    <input name="email" type="email" autocomplete="email">
+                </label>
+            {% endif %}
+
+            <label>
+                Password
+                <input name="password" type="password" autocomplete="{{ 'current-password' if mode == 'login' else 'new-password' }}" {% if mode == "signup" %}minlength="8"{% endif %} required>
+            </label>
+
+            {% if mode == "signup" %}
+                <p class="microcopy">Password must be at least 8 characters.</p>
+                <label>
+                    Confirm password
+                    <input name="confirm" type="password" autocomplete="new-password" minlength="8" required>
+                </label>
+            {% endif %}
+
+            <button class="primary-button" type="submit">{{ "Log in" if mode == "login" else "Create account" }}</button>
+
+            {% if mode == "login" %}
+                <p class="form-link">New here? <a href="{{ url_for('signup') }}">Create an account</a></p>
+            {% else %}
+                <p class="form-link">Already registered? <a href="{{ url_for('login') }}">Log in</a></p>
+            {% endif %}
+        </form>
+    </section>
+</main>
+{% endblock %}
