@@ -104,6 +104,9 @@ Open `http://127.0.0.1:8000`.
 Manasvi includes a basic crisis-keyword response, but it cannot detect every emergency and cannot provide crisis intervention. Users who may be in immediate danger should contact local emergency services or a trusted person right away.
 
 ## Demo Images
-![Manasvi](demo_images/Manasvi_1.png)
-![Manasvi](demo_images/Manasvi_2.png)
-![Manasvi](demo_images/Manasvi_3.png)
+
+| | |
+|---|---|
+| ![Manasvi](demo_images/Manasvi_1.png) | ![Manasvi](demo_images/Manasvi_2.png) |
+| ![Manasvi](demo_images/Manasvi_3.png) | |
+
